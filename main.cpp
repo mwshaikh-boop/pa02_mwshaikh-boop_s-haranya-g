@@ -116,11 +116,11 @@ int main(int argc, char** argv){
     auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
     double time_taken = duration.count() / 1000.0;  // Convert to milliseconds
     
-    if (time_taken < 1.0) {
-        cout << " Time : " << time_taken * 1000 << " microsec" << endl;  // Convert back to microsec if < 1ms
-    } else {
-        cout << " Time : " << time_taken << " ms" << endl;
-    }
+    //if (time_taken < 1.0) {
+    //    cout << " Time : " << time_taken * 1000 << " microsec" << endl;  // Convert back to microsec if < 1ms
+    //} else {
+    //    cout << " Time : " << time_taken << " ms" << endl;
+    //}
     return 0;
 }
 
@@ -128,6 +128,7 @@ int main(int argc, char** argv){
 
 /* 
 Worst-case Big-O time complexity: O(m log(n) + m + mn + mk log(k))
+The for loop that takes out each of the prefixes in the vector prefixes will run for however many prefixes there are, or m times. Within that for loop, the function findPrefix is called, which doesn't have a constant time complexity. It uses lower_bound to assign a value to the iterator it, which has a time complexity of log(n) + 1. A while loop then runs until the iterator reaches the end, which has a worst case time complexity of n. Finally, this function uses sort, which has a runtime of klogk. This gives the findPrefix function a time complexity of O(log(n) + 1 + n + klog(k)). Everything else in this prefix and in the main function for part 2 (excluding the parts that print) have a constant time complexity. We can multiply m by the time complexity of findPrefix to get O(m log(n) + m + mn + mk log(k)).
 
 input_20_random.csv runtime for prefix_large.txt: 31.8 ms
 input_100_random.csv runtime for prefix_large.txt: 48.5 ms
@@ -135,6 +136,7 @@ input_1000_random.csv runtime for prefix_large.txt: 54.6 ms
 input_76920_random.csv runtime for prefix_large.txt: 334.1 ms
 
 Worst-case Big-O space complexity: O(m + k)
+For part 2, we make 3 vectors called highestRatings, highestNames, and prefixExists, all of which can have a maximum size of however many prefixes there are, giving a space complexity of O(m). The function findPrefix also creates a vector called result, which can push into it at most k movies, or the max number of movies with each prefix, giving a space complexity of O(k). Therefore, the space complexity for part 2 is O(m + k).
 
 We designed our algorithm to have a low time complexity, with our target complexity being less than O(n^2)
 We were also able to achieve a low space complexity of O(m + k) since the space complexity is not dependent on the total number of movies (or n), but rather is only dependent on the number of prefixes and the maximum number of movies with each prefix.
