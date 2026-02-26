@@ -58,10 +58,13 @@ void MovieCollection::findPrefix(const string& prefix){
     highestTitle = "";
     int size = prefix.length();
     Movie burner(prefix, 0);
+    // Time complexity of lower_bound: log(n) + 1
     auto it = lower_bound(movies.begin(), movies.end(), burner);
+    // Time complexity of while loop: n
     while(it != movies.end()){
       //++it;	    
       if(it->getTitle().compare(0, size, prefix) != 0) break;
+      // Space complexity of result vector: k
       result.push_back(*it);
 
       if(it->getRating() > highestRating || (it->getRating() == highestRating && it->getTitle() < highestTitle)){
@@ -70,6 +73,7 @@ void MovieCollection::findPrefix(const string& prefix){
       }
       ++it;
     }
+    // Time complexity of sort: klogk
     sort(result.begin(), result.end(), comp);
     MovieCollection resultCol;
     resultCol.getMovies() = result;

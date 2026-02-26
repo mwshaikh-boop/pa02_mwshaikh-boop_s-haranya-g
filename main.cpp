@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <ctime>
+#include <chrono>
 #include <vector>
 #include <cstring>
 #include <algorithm>
@@ -75,12 +76,18 @@ int main(int argc, char** argv){
     //  For each prefix,
     //  Find all movies that have that prefix and store them in an appropriate data structure
     //  If no movie with that prefix exists print the following message
+    auto start = chrono::high_resolution_clock::now();
+
     vector<double> highestRatings;
     vector<string> highestNames;
     vector<string> prefixExists;
+    // time complexity of for loop: O(m)
     for(string prefix: prefixes){
+      // time complexity of findPrefix: O(logn + 1 + n + klogk)
+      // space complexity of findPrefix: O(k)
       movieList.findPrefix(prefix);
       if(movieList.getHighestRating() != -1){
+	// space complexity of highestRatings, highestNames, prefixExists vectors: O(m)
         highestRatings.push_back(movieList.getHighestRating());
         highestNames.push_back(movieList.getHighestTitle());
 	prefixExists.push_back(prefix);
@@ -95,14 +102,43 @@ int main(int argc, char** argv){
 
     //  For each prefix,
     //  Print the highest rated movie with that prefix if it exists.
+
     for(int i = 0; i < prefixExists.size(); i++){
     cout << "Best movie with prefix " << prefixExists[i] << " is: " << highestNames[i] << " with rating " << std::fixed << std::setprecision(1) << highestRatings[i] << endl;
     }
+    // Total time complexity: m * (log(n) + 1 + n + klogk) = O(mlogn + m + mn + mklogk)
+    // Total space complexity: m + k = O(m + k)
 
+    // End timing
+    auto end = chrono::high_resolution_clock::now();
+
+    // Calculate duration in microseconds (as a double)
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
+    double time_taken = duration.count() / 1000.0;  // Convert to milliseconds
+    
+    if (time_taken < 1.0) {
+        cout << " Time : " << time_taken * 1000 << " microsec" << endl;  // Convert back to microsec if < 1ms
+    } else {
+        cout << " Time : " << time_taken << " ms" << endl;
+    }
     return 0;
 }
 
 /* Add your run time analysis for part 3 of the assignment here as commented block*/
+
+/* 
+Worst-case Big-O time complexity: O(m log(n) + m + mn + mk log(k))
+
+input_20_random.csv runtime for prefix_large.txt: 31.8 ms
+input_100_random.csv runtime for prefix_large.txt: 48.5 ms
+input_1000_random.csv runtime for prefix_large.txt: 54.6 ms
+input_76920_random.csv runtime for prefix_large.txt: 334.1 ms
+
+Worst-case Big-O space complexity: O(m + k)
+
+We designed our algorithm to have a low time complexity, with our target complexity being less than O(n^2)
+We were also able to achieve a low space complexity of O(m + k) since the space complexity is not dependent on the total number of movies (or n), but rather is only dependent on the number of prefixes and the maximum number of movies with each prefix.
+*/
 
 bool parseLine(string &line, string &movieName, double &movieRating) {
     int commaIndex = line.find_last_of(",");
