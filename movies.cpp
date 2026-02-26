@@ -60,7 +60,7 @@ void MovieCollection::findPrefix(const string& prefix){
     for (Movie &m : movies){
       if(m.getTitle().substr(0, size) == prefix){
 	    result.insert(m.getTitle(), m.getRating());
-	    if(m.getRating() > highestRating || (m.getRating() == highestRating && m.getTitle() > highestTitle)){
+	    if(m.getRating() > highestRating || (m.getRating() == highestRating && m.getTitle() < highestTitle)){
 	      highestRating = m.getRating();
 	      highestTitle = m.getTitle();
 	    }
