@@ -47,7 +47,8 @@ int main(int argc, char** argv){
             // insert elements into your data structure
             movieList.insert(movieName, movieRating);
     }
-
+    
+    movieList.sortByTitle();
     movieFile.close();
 
     if (argc == 2){

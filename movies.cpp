@@ -53,21 +53,27 @@ string MovieCollection::getHighestTitle() const{
 }
 
 void MovieCollection::findPrefix(const string& prefix){
-    MovieCollection result;
+    vector<Movie> result;
     highestRating = -1;
     highestTitle = "";
     int size = prefix.length();
-    for (Movie &m : movies){
-      if(m.getTitle().substr(0, size) == prefix){
-	    result.insert(m.getTitle(), m.getRating());
-	    if(m.getRating() > highestRating || (m.getRating() == highestRating && m.getTitle() < highestTitle)){
-	      highestRating = m.getRating();
-	      highestTitle = m.getTitle();
-	    }
+    Movie burner(prefix, 0);
+    auto it = lower_bound(movies.begin(), movies.end(), burner);
+    while(it != movies.end()){
+      //++it;	    
+      if(it->getTitle().compare(0, size, prefix) != 0) break;
+      result.push_back(*it);
+
+      if(it->getRating() > highestRating || (it->getRating() == highestRating && it->getTitle() < highestTitle)){
+	      highestRating = it->getRating();
+	      highestTitle = it->getTitle();
       }
-    } 
-    sort(result.getMovies().begin(), result.getMovies().end(), comp);
-    result.printAll();
+      ++it;
+    }
+    sort(result.begin(), result.end(), comp);
+    MovieCollection resultCol;
+    resultCol.getMovies() = result;
+    resultCol.printAll();
 }
 
 bool comp(const Movie& a, const Movie& b){

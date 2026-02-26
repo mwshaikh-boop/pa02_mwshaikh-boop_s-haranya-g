@@ -38,5 +38,5 @@ class MovieCollection{
 };
 
 bool comp(const Movie& a, const Movie& b);
-
+bool compare(Movie& m, string& s);
 #endif
